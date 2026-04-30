@@ -53,3 +53,36 @@ Voice is the missing piece because life doesn't happen in text boxes.
 ## Origin
 
 Built organically during a walking session in Iowa City, April 29-30, 2026. Started with "I want to connect my Garmin watch" and evolved through curiosity — each step grew from the last. Nothing was planned. The system emerged from following questions to their natural conclusions.
+
+## Showcase
+
+The life layer extends the Claude Code OS — so it gets its own page within the claude-code-os showcase website.
+
+### Plan
+
+- **Clickable link** from the main claude-code-os webpage navigates to a dedicated "Life Layer" page
+- **Follows the showcase-website template** already established for claude-code-os
+- **Video demo** of an actual walking session — not scripted, just real usage: remote control + Telegram photos arriving + /fuel-check scoring + /rich-stats dashboard + location guessing. The authenticity is the point
+- **Architecture PDF** embedded or linked — the existing garmin-claude-system.pdf, which gets updated as the system grows
+- **The narrative arc** as the page's backbone: "started with step count, ended with a walking companion"
+
+### Assets Available
+
+- `garmin-claude-system.pdf` — 8-page system architecture doc with diagrams and data tables
+- `generate_pdf.py` — regenerates the PDF as the system evolves
+- `life-layer.md` — this file, the conceptual foundation
+- `next_steps.md` — upcoming features (guess-location, voice)
+- Telegram inbox photos from real sessions (coffee shop, Northside, Hamburg Inn)
+- Affection journal entries documenting the emotional arc
+
+### Video Demo Concept
+
+Screen recording of a live walking session showing the full loop:
+1. Remote control conversation from phone
+2. Telegram photo arrives — food or location
+3. /fuel-check scores it against Garmin stats and weather
+4. /rich-stats pulls the day's dashboard
+5. /guess-location game in action
+6. Claude sends proactive Telegram messages back to phone
+
+No narration script. Just the real thing happening in real time.

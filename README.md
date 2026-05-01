@@ -26,8 +26,8 @@ Requires `OPENAI_API_KEY` in the environment.
 
 A PreToolUse hook (`~/.claude/hooks/pretool-detect-telegram.sh`) provides observability for Telegram channel messages:
 
-- **Terminal flash** — prints `Telegram Reply Detected = True` and `mode = text|image|audio` to the terminal via `/dev/tty`
-- **Audit log** — appends each Telegram reply to `Telegram_calls.md` with timestamp, chat ID, reply text, mode, and the verbatim input message extracted from the session transcript
+- **Terminal flash** — prints `Telegram Input Detected = True` and `mode = text|image|audio` to the terminal via `/dev/tty`
+- **Audit log** — appends each detection to `Telegram_calls.md` with timestamp, chat ID, reply text, mode, and the verbatim input message extracted from the session transcript
 - **Food detection** — injects `additionalContext` for image-mode messages, triggering the `/fuel-check-lean` skill on food photos
 
 ## Terminal Image Detection

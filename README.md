@@ -30,9 +30,19 @@ A PreToolUse hook (`~/.claude/hooks/pretool-detect-telegram.sh`) provides observ
 - **Audit log** — appends each Telegram reply to `Telegram_calls.md` with timestamp, chat ID, reply text, mode, and the verbatim input message extracted from the session transcript
 - **Food detection** — injects `additionalContext` for image-mode messages, triggering the `/fuel-check-lean` skill on food photos
 
+## Terminal Image Detection
+
+A UserPromptSubmit hook (`~/.claude/hooks/userprompt-detect-image.sh`) detects camera images sent via the Claude Code mobile app:
+
+- **Terminal flash** — prints `Terminal Image Detected = True` to the terminal via `/dev/tty`
+- **Audit log** — appends each detection to `Terminal_image_calls.md` with timestamp, image path, and full input
+- **Food detection** — injects `additionalContext` triggering `/fuel-check-lean` on food photos
+
+Note: The CC app requires text alongside images (image-only sends silently fail — [#55198](https://github.com/anthropics/claude-code/issues/55198)). Workaround: type `/fuel-check-lean` as the text input.
+
 ## Skills
 
-Two global skills wrap the MCP tools for quick access:
+Three global skills wrap the MCP tools for quick access:
 
 - `/step-count` — one-line step count for any date
 - `/rich-stats` — full daily dashboard with all metrics
@@ -50,6 +60,10 @@ Telegram Voice → Bot API → Channel Plugin → transcribe.py (Whisper) → Cl
 
 ```
 Telegram Reply → PreToolUse Hook → Terminal Flash + Telegram_calls.md Audit Log
+```
+
+```
+CC App Camera → UserPromptSubmit Hook → Terminal Flash + Terminal_image_calls.md Audit Log
 ```
 
 Data freshness depends on your last Bluetooth sync.

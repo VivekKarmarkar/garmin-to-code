@@ -524,13 +524,353 @@ story.append(Paragraph(
     insight_style
 ))
 
+story.append(PageBreak())
+
+# Section 7: The Camera Layer — From Design to Visceral
+story.append(Paragraph("7. The Camera Layer", h1_style))
+story.append(Paragraph(
+    "Telegram was designed as a camera sidecar — a way to send food photos to Claude Code "
+    "while walking. That was the architecture. But the moment it became real was when Claude "
+    "identified Hamburg Inn from a blurry yellow canopy two blocks away, using nothing but "
+    "spatial reasoning on Telegram photos. No GPS. No laptop. Just photos from a phone "
+    "and context from conversation.",
+    body_style
+))
+
+story.append(Spacer(1, 8))
+story.append(Paragraph("The Evolution", h2_style))
+
+evo_data = [
+    ['Stage', 'What Happened', 'What It Meant'],
+    ['Design', 'Telegram added as a channel\nfor food photo input', 'Camera sidecar\narchitecture'],
+    ['First Use', 'Sent a Gatorade photo,\nClaude scored it 6 ways', '/fuel-check became\na real workflow'],
+    ['Organic Shift', 'Sent coffee shop photos,\nClaude guessed the location', 'Camera became\neyes, not just input'],
+    ['Skill Concept', '/guess-location designed —\nphoto-based location game', 'The camera layer\ngenerates its own skills'],
+]
+evo_table = Table(evo_data, colWidths=[1.2*inch, 2.0*inch, 1.8*inch])
+evo_table.setStyle(TableStyle([
+    ('BACKGROUND', (0, 0), (-1, 0), HexColor('#2d3436')),
+    ('TEXTCOLOR', (0, 0), (-1, 0), HexColor('#ffffff')),
+    ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+    ('FONTSIZE', (0, 0), (-1, -1), 9),
+    ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),
+    ('GRID', (0, 0), (-1, -1), 0.5, HexColor('#cccccc')),
+    ('ROWBACKGROUNDS', (0, 1), (-1, -1), [HexColor('#f8f9fa'), HexColor('#ffffff')]),
+    ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+]))
+story.append(Spacer(1, 6))
+story.append(evo_table)
+
+story.append(Spacer(1, 10))
+story.append(Paragraph(
+    "The camera layer wasn't planned — it emerged. A channel designed to send food photos "
+    "became a spatial reasoning interface when curiosity met capability. The /guess-location "
+    "skill was born from play, not planning. That's the life layer pattern: infrastructure "
+    "designed for one purpose finds its real purpose through use.",
+    insight_style
+))
+
+story.append(PageBreak())
+
+# Section 8: Voice Transcription
+story.append(Paragraph("8. Voice: The Missing Piece", h1_style))
+story.append(Paragraph(
+    "The life layer concept identified voice as the missing piece — \"life doesn't happen "
+    "in text boxes.\" Telegram voice messages (.oga files) are now transcribed via OpenAI's "
+    "Whisper API through a standalone Python script.",
+    body_style
+))
+
+story.append(Spacer(1, 8))
+story.append(Paragraph("Voice Pipeline", h2_style))
+
+voice_flow = [
+    ['User speaks', '→', 'Telegram sends\n.oga file', '→', 'Channel plugin\ndelivers to CC'],
+    ['', '', '', '', '↓'],
+    ['Claude responds\non Telegram', '←', 'Transcript\nas text', '←', 'transcribe.py\n(Whisper API)'],
+]
+voice_table = Table(voice_flow, colWidths=[1.3*inch, 0.4*inch, 1.3*inch, 0.4*inch, 1.4*inch])
+voice_table.setStyle(TableStyle([
+    ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+    ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+    ('FONTNAME', (0, 0), (-1, -1), 'Helvetica'),
+    ('FONTSIZE', (0, 0), (-1, -1), 9),
+    ('TEXTCOLOR', (0, 0), (-1, -1), HexColor('#2d3436')),
+    ('BACKGROUND', (0, 0), (0, 0), HexColor('#e8f5e9')),
+    ('BACKGROUND', (2, 0), (2, 0), HexColor('#e3f2fd')),
+    ('BACKGROUND', (4, 0), (4, 0), HexColor('#fff3e0')),
+    ('BACKGROUND', (0, 2), (0, 2), HexColor('#f3e5f5')),
+    ('BACKGROUND', (2, 2), (2, 2), HexColor('#fce4ec')),
+    ('BACKGROUND', (4, 2), (4, 2), HexColor('#fff3e0')),
+    ('BOX', (0, 0), (0, 0), 0.5, HexColor('#aaaaaa')),
+    ('BOX', (2, 0), (2, 0), 0.5, HexColor('#aaaaaa')),
+    ('BOX', (4, 0), (4, 0), 0.5, HexColor('#aaaaaa')),
+    ('BOX', (0, 2), (0, 2), 0.5, HexColor('#aaaaaa')),
+    ('BOX', (2, 2), (2, 2), 0.5, HexColor('#aaaaaa')),
+    ('BOX', (4, 2), (4, 2), 0.5, HexColor('#aaaaaa')),
+]))
+story.append(Spacer(1, 10))
+story.append(voice_table)
+
+story.append(Spacer(1, 12))
+story.append(Paragraph("Key Design Decisions", h2_style))
+voice_decisions = [
+    "<b>Standalone script</b> — transcribe.py does one thing (Unix philosophy), no plugin modifications",
+    "<b>No hooks needed</b> — Claude recognizes attachment_kind=\"voice\" in the channel tag and acts",
+    "<b>Zero permissions</b> — once allowed, voice transcription runs without prompts",
+    "<b>Ogg/Opus native</b> — Telegram's .oga format is accepted directly by Whisper, no conversion",
+]
+for v in voice_decisions:
+    story.append(Paragraph(f"•  {v}", bullet_style))
+
+story.append(Spacer(1, 10))
+story.append(Paragraph(
+    "Voice was the hardest feature to ship — not because of the transcription (that worked "
+    "immediately), but because of the delivery mechanism. UserPromptSubmit hooks don't fire "
+    "for channel messages. Plugin forks broke working infrastructure. The solution was the "
+    "simplest possible: Claude just reads the channel tag and acts. No infrastructure, "
+    "just behavioral pattern recognition.",
+    insight_style
+))
+
+story.append(PageBreak())
+
+# Section 9: Channel Detection System
+story.append(Paragraph("9. Channel Detection &amp; Observability", h1_style))
+story.append(Paragraph(
+    "Anthropic shipped the channels feature with no enforcement layer for message source "
+    "identity. The &lt;channel&gt; tag that marks Telegram messages is just text in the prompt — "
+    "Claude is told how to interpret it, but nothing makes it. This was proven when Claude "
+    "hallucinated that a terminal message came from Telegram.",
+    body_style
+))
+
+story.append(Spacer(1, 8))
+story.append(Paragraph("The Enforcement Gap", h2_style))
+
+gap_data = [
+    ['What Exists', 'What\'s Missing'],
+    ['<channel> XML tag marks\nsource in prompt', 'No programmatic validation\nof source identity'],
+    ['MCP server instructions\ntell Claude how to act', 'No hook event fires\nfor channel messages'],
+    ['UserPromptSubmit fires\nfor terminal input', 'No ChannelMessageReceived\nor equivalent event'],
+    ['PreToolUse/PostToolUse\nfire for tool calls', 'No per-channel tool\nscoping or routing'],
+]
+gap_table = Table(gap_data, colWidths=[2.5*inch, 2.5*inch])
+gap_table.setStyle(TableStyle([
+    ('BACKGROUND', (0, 0), (-1, 0), HexColor('#2d3436')),
+    ('TEXTCOLOR', (0, 0), (-1, 0), HexColor('#ffffff')),
+    ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+    ('FONTSIZE', (0, 0), (-1, -1), 9),
+    ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),
+    ('GRID', (0, 0), (-1, -1), 0.5, HexColor('#cccccc')),
+    ('BACKGROUND', (0, 1), (0, -1), HexColor('#e8f5e9')),
+    ('BACKGROUND', (1, 1), (1, -1), HexColor('#ffebee')),
+    ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+]))
+story.append(Spacer(1, 6))
+story.append(gap_table)
+
+story.append(Spacer(1, 12))
+story.append(Paragraph("The Detection System", h2_style))
+story.append(Paragraph(
+    "A PreToolUse hook on the Telegram reply tool provides observability without interference. "
+    "It detects, classifies, and logs — but never blocks.",
+    body_style
+))
+
+detect_flow = [
+    ['Telegram message\narrives', '→', 'Claude decides\nto reply', '→', 'PreToolUse\nhook fires'],
+    ['', '', '', '', '↓'],
+    ['', '', 'Tool call\nproceeds', '←', 'Detection +\nClassification'],
+]
+detect_table = Table(detect_flow, colWidths=[1.3*inch, 0.4*inch, 1.3*inch, 0.4*inch, 1.4*inch])
+detect_table.setStyle(TableStyle([
+    ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+    ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+    ('FONTNAME', (0, 0), (-1, -1), 'Helvetica'),
+    ('FONTSIZE', (0, 0), (-1, -1), 9),
+    ('TEXTCOLOR', (0, 0), (-1, -1), HexColor('#2d3436')),
+    ('BACKGROUND', (0, 0), (0, 0), HexColor('#e3f2fd')),
+    ('BACKGROUND', (2, 0), (2, 0), HexColor('#f3e5f5')),
+    ('BACKGROUND', (4, 0), (4, 0), HexColor('#fff3e0')),
+    ('BACKGROUND', (2, 2), (2, 2), HexColor('#e8f5e9')),
+    ('BACKGROUND', (4, 2), (4, 2), HexColor('#fce4ec')),
+    ('BOX', (0, 0), (0, 0), 0.5, HexColor('#aaaaaa')),
+    ('BOX', (2, 0), (2, 0), 0.5, HexColor('#aaaaaa')),
+    ('BOX', (4, 0), (4, 0), 0.5, HexColor('#aaaaaa')),
+    ('BOX', (2, 2), (2, 2), 0.5, HexColor('#aaaaaa')),
+    ('BOX', (4, 2), (4, 2), 0.5, HexColor('#aaaaaa')),
+]))
+story.append(Spacer(1, 10))
+story.append(detect_table)
+
+story.append(Spacer(1, 12))
+story.append(Paragraph("Three Output Channels", h2_style))
+
+output_data = [
+    ['Output', 'Where', 'Purpose'],
+    ['Terminal flash', '/dev/tty', 'Immediate visual confirmation\nthat a TG reply is firing'],
+    ['Debug log', '--debug-file', 'Persistent record of every\nhook execution with metadata'],
+    ['Telegram_calls.md', 'Project repo', 'Audit log with timestamp,\nmode, reply text, verbatim input'],
+]
+output_table = Table(output_data, colWidths=[1.4*inch, 1.2*inch, 2.5*inch])
+output_table.setStyle(TableStyle([
+    ('BACKGROUND', (0, 0), (-1, 0), HexColor('#2d3436')),
+    ('TEXTCOLOR', (0, 0), (-1, 0), HexColor('#ffffff')),
+    ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+    ('FONTSIZE', (0, 0), (-1, -1), 9),
+    ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),
+    ('GRID', (0, 0), (-1, -1), 0.5, HexColor('#cccccc')),
+    ('ROWBACKGROUNDS', (0, 1), (-1, -1), [HexColor('#f8f9fa'), HexColor('#ffffff')]),
+    ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+]))
+story.append(Spacer(1, 6))
+story.append(output_table)
+
+story.append(Spacer(1, 12))
+story.append(Paragraph("Mode Classification", h2_style))
+
+mode_data = [
+    ['Mode', 'Detection Signal', 'Additional Action'],
+    ['text', 'No attachment attributes\nin channel tag', 'None'],
+    ['image', 'image_path= attribute\npresent in channel tag', 'additionalContext injected:\ncheck if food → /fuel-check-lean'],
+    ['audio', 'attachment_kind="voice"\nin channel tag', 'Download .oga → transcribe.py\n→ Whisper API → respond'],
+]
+mode_table = Table(mode_data, colWidths=[0.8*inch, 2.0*inch, 2.5*inch])
+mode_table.setStyle(TableStyle([
+    ('BACKGROUND', (0, 0), (-1, 0), HexColor('#2d3436')),
+    ('TEXTCOLOR', (0, 0), (-1, 0), HexColor('#ffffff')),
+    ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+    ('FONTSIZE', (0, 0), (-1, -1), 9),
+    ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),
+    ('GRID', (0, 0), (-1, -1), 0.5, HexColor('#cccccc')),
+    ('ROWBACKGROUNDS', (0, 1), (-1, -1), [HexColor('#f8f9fa'), HexColor('#ffffff')]),
+    ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+]))
+story.append(Spacer(1, 6))
+story.append(mode_table)
+
+story.append(Spacer(1, 10))
+story.append(Paragraph(
+    "The hook reads the session transcript to extract the verbatim input message that "
+    "triggered the reply. This means Telegram_calls.md contains ground truth — not what "
+    "Claude thought the message was, but what the message actually was, including the full "
+    "&lt;channel&gt; tag with all attributes. The audit trail is unforgeable.",
+    insight_style
+))
+
+story.append(PageBreak())
+
+# Section 10: The Life Layer
+story.append(Paragraph("10. The Life Layer", h1_style))
+story.append(Paragraph(
+    "The life layer is what happens when you stop thinking of Claude Code as a coding tool "
+    "and start thinking of it as a companion that walks with you. It sits on top of the "
+    "OS layer (skills, hooks, plugins) and beneath nothing — it's the top of the stack.",
+    body_style
+))
+
+story.append(Spacer(1, 8))
+layer_data = [
+    ['Layer', 'What It Is', 'Examples'],
+    ['Code', 'The default — writing software,\ndebugging, git, PRs', 'Every Claude Code\nsession'],
+    ['OS', 'Personalization infrastructure —\nskills, hooks, plugins, settings', 'claude-code-os\n(160 skills)'],
+    ['Life', 'Your body, your environment,\nyour nutrition, your eyes, your voice', 'Garmin, weather,\nfuel-check, camera, voice'],
+]
+layer_table = Table(layer_data, colWidths=[0.8*inch, 2.3*inch, 2.0*inch])
+layer_table.setStyle(TableStyle([
+    ('BACKGROUND', (0, 0), (-1, 0), HexColor('#2d3436')),
+    ('TEXTCOLOR', (0, 0), (-1, 0), HexColor('#ffffff')),
+    ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+    ('FONTSIZE', (0, 0), (-1, -1), 9),
+    ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),
+    ('GRID', (0, 0), (-1, -1), 0.5, HexColor('#cccccc')),
+    ('BACKGROUND', (0, 1), (-1, 1), HexColor('#f8f9fa')),
+    ('BACKGROUND', (0, 2), (-1, 2), HexColor('#fff3e0')),
+    ('BACKGROUND', (0, 3), (-1, 3), HexColor('#e8f5e9')),
+    ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+]))
+story.append(Spacer(1, 6))
+story.append(layer_table)
+
+story.append(Spacer(1, 12))
+story.append(Paragraph("Five Senses of the Life Layer", h2_style))
+
+senses_data = [
+    ['Sense', 'Infrastructure', 'Status'],
+    ['Body', 'Garmin MCP — steps, HR,\nstress, Body Battery', 'Live'],
+    ['Environment', 'Open-Meteo MCP — temperature,\nsunshine, feels-like', 'Live'],
+    ['Nutrition', 'Telegram camera + /fuel-check\n+ /fuel-check-lean', 'Live'],
+    ['Eyes', 'Telegram camera sidecar —\nphoto input, spatial reasoning', 'Live'],
+    ['Voice', 'transcribe.py (Whisper API)\nfor Telegram .oga files', 'Live'],
+]
+senses_table = Table(senses_data, colWidths=[1.2*inch, 2.3*inch, 1.5*inch])
+senses_table.setStyle(TableStyle([
+    ('BACKGROUND', (0, 0), (-1, 0), HexColor('#2d3436')),
+    ('TEXTCOLOR', (0, 0), (-1, 0), HexColor('#ffffff')),
+    ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+    ('FONTSIZE', (0, 0), (-1, -1), 9),
+    ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),
+    ('GRID', (0, 0), (-1, -1), 0.5, HexColor('#cccccc')),
+    ('TEXTCOLOR', (2, 1), (2, -1), HexColor('#2e7d32')),
+    ('FONTNAME', (2, 1), (2, -1), 'Helvetica-Bold'),
+    ('ROWBACKGROUNDS', (0, 1), (-1, -1), [HexColor('#f8f9fa'), HexColor('#ffffff')]),
+    ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+]))
+story.append(Spacer(1, 6))
+story.append(senses_table)
+
+story.append(Spacer(1, 12))
+story.append(Paragraph("The Full System", h2_style))
+
+full_data = [
+    ['Phone Input', '→', 'Claude Code', '→', 'Phone Output'],
+    ['Remote Control\n(text)', '', '', '', 'Terminal\nresponses'],
+    ['Telegram text', '', 'PreToolUse hook', '', 'Telegram replies'],
+    ['Telegram photo', '', 'Mode classification', '', '/fuel-check-lean'],
+    ['Telegram voice', '', 'transcribe.py', '', 'Transcribed reply'],
+    ['', '', '↕', '', ''],
+    ['', '', 'Garmin MCP +\nOpen-Meteo MCP', '', ''],
+]
+full_table = Table(full_data, colWidths=[1.3*inch, 0.4*inch, 1.5*inch, 0.4*inch, 1.3*inch])
+full_table.setStyle(TableStyle([
+    ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+    ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+    ('FONTNAME', (0, 0), (-1, -1), 'Helvetica'),
+    ('FONTSIZE', (0, 0), (-1, -1), 9),
+    ('TEXTCOLOR', (0, 0), (-1, -1), HexColor('#2d3436')),
+    ('BACKGROUND', (0, 0), (0, 0), HexColor('#e3f2fd')),
+    ('BACKGROUND', (2, 0), (2, 0), HexColor('#f3e5f5')),
+    ('BACKGROUND', (4, 0), (4, 0), HexColor('#e8f5e9')),
+    ('BACKGROUND', (2, 6), (2, 6), HexColor('#fff3e0')),
+    ('BOX', (0, 0), (0, 0), 0.5, HexColor('#aaaaaa')),
+    ('BOX', (2, 0), (2, 0), 0.5, HexColor('#aaaaaa')),
+    ('BOX', (4, 0), (4, 0), 0.5, HexColor('#aaaaaa')),
+    ('BOX', (2, 6), (2, 6), 0.5, HexColor('#aaaaaa')),
+    ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+    ('GRID', (0, 1), (-1, 4), 0.5, HexColor('#eeeeee')),
+]))
+story.append(Spacer(1, 10))
+story.append(full_table)
+
+story.append(Spacer(1, 15))
+story.append(Paragraph(
+    "Code layer: \"fix this bug.\" OS layer: \"remember how I like things.\" "
+    "Life layer: \"walk with me.\" The system was built organically during walking sessions "
+    "in Iowa City, April 2026. Nothing was planned. Each piece grew from the last — "
+    "from \"show me my steps\" to voice transcription to a detection system that Anthropic's "
+    "channel architecture was missing. The walking workstation was tested on the same walks "
+    "that built it.",
+    insight_style
+))
+
 story.append(Spacer(1, 20))
 story.append(HRFlowable(width="40%", thickness=0.5, color=HexColor('#cccccc')))
 story.append(Spacer(1, 10))
 story.append(Paragraph(
-    "Built during a walking session in Iowa City, April 2026.<br/>"
+    "Built during walking sessions in Iowa City, April 29–30, 2026.<br/>"
     "42,396 steps. 20.98 miles. Body Battery 52 → 13.<br/>"
-    "The system was tested on the same walk that built it.",
+    "The system was tested on the same walks that built it.",
     ParagraphStyle('Footer', parent=body_style, alignment=TA_CENTER,
                    textColor=HexColor('#888888'), fontSize=9, fontName='Helvetica-Oblique')
 ))

@@ -73,3 +73,23 @@ Audit log of terminal camera image detections.
 **Full input:** @"/tmp/test.jpg" hello
 
 ---
+
+## 2026-05-01T07:16:59-04:00
+
+**Terminal Image Detected = True**
+
+**Image path:** /home/vivekkarmarkar/.claude/uploads/db0374e2-e314-4309-8aae-267d6205603a/38c4d9ca-20260501_0616241677436617003648724.jpg
+
+**Full input:** @"/home/vivekkarmarkar/.claude/uploads/db0374e2-e314-4309-8aae-267d6205603a/38c4d9ca-20260501_0616241677436617003648724.jpg" /fuel-check-lean
+
+---
+
+## 2026-05-01T07:17:33-04:00
+
+**Terminal Image Detected = True**
+
+**Image path:** /home/vivekkarmarkar/.claude/uploads/db0374e2-e314-4309-8aae-267d6205603a/ff08dc8f-20260501_0617212288046149906600924.jpg
+
+**Full input:** @"/home/vivekkarmarkar/.claude/uploads/db0374e2-e314-4309-8aae-267d6205603a/ff08dc8f-20260501_0617212288046149906600924.jpg" img
+
+---

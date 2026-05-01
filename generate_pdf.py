@@ -999,11 +999,199 @@ story.append(Paragraph(
     insight_style
 ))
 
+story.append(PageBreak())
+
+# Section 12: Channel Decomposition
+story.append(Paragraph("12. Channel Decomposition", h1_style))
+story.append(Paragraph(
+    "After building cameras, voice, hooks, and detection systems across two channels, "
+    "a question emerged: which channel actually owns what? The answer required separating "
+    "genuine strengths from symptom-patching — workarounds for broken features that will "
+    "disappear once the upstream bug is fixed.",
+    body_style
+))
+
+story.append(Spacer(1, 8))
+story.append(Paragraph("The Ownership Map", h2_style))
+
+ownership_data = [
+    ['Capability', 'Owner', 'Why'],
+    ['Food photos +\nskill invocation', 'CC App', 'User thinks in slash commands.\nSnap photo + type /fuel-check-lean\nor /fuel-check. Native, no external dep.'],
+    ['Location guessing', 'CC App', 'Snap photo + /guess-location.\nSame pattern as food.'],
+    ['Any image +\nexplicit skill', 'CC App', 'The camera works natively now.\nSlash commands encode intent.'],
+    ['Voice notes', 'Telegram', 'Genuinely specialized. CC app voice\nis poor. Telegram voice notes are\nsimple, mobile, and transcription\npipeline is proven.'],
+    ['Wearable data', 'Garmin MCP', 'Irreplaceable. No other source\nfor HR, Body Battery, stress,\nstep data from the watch.'],
+    ['Weather context', 'Open-Meteo MCP', 'No API key needed. Global coverage.\nCloses the environment loop.'],
+]
+ownership_table = Table(ownership_data, colWidths=[1.3*inch, 1.1*inch, 2.7*inch])
+ownership_table.setStyle(TableStyle([
+    ('BACKGROUND', (0, 0), (-1, 0), HexColor('#2d3436')),
+    ('TEXTCOLOR', (0, 0), (-1, 0), HexColor('#ffffff')),
+    ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+    ('FONTSIZE', (0, 0), (-1, -1), 9),
+    ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),
+    ('GRID', (0, 0), (-1, -1), 0.5, HexColor('#cccccc')),
+    ('ROWBACKGROUNDS', (0, 1), (-1, -1), [HexColor('#f8f9fa'), HexColor('#ffffff')]),
+    ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+    ('BACKGROUND', (1, 1), (1, 3), HexColor('#e8f5e9')),
+    ('BACKGROUND', (1, 4), (1, 4), HexColor('#e3f2fd')),
+    ('BACKGROUND', (1, 5), (1, 5), HexColor('#fff3e0')),
+    ('BACKGROUND', (1, 6), (1, 6), HexColor('#fce4ec')),
+]))
+story.append(Spacer(1, 6))
+story.append(ownership_table)
+
+story.append(Spacer(1, 12))
+story.append(Paragraph("Patching vs Genuine", h2_style))
+story.append(Paragraph(
+    "A critical distinction: if a capability only exists on a channel because the primary "
+    "channel is broken, that's patching a symptom. It will become obsolete when the upstream "
+    "bug is fixed.",
+    body_style
+))
+
+patch_data = [
+    ['Capability', 'Channel', 'Verdict'],
+    ['Captionless photos', 'Telegram', 'Patching. CC app silently fails\non image-only sends (#55198).\nFix the bug → this disappears.'],
+    ['Voice notes', 'Telegram', 'Genuine. CC app voice is poor.\nVoice is nuanced — mobile notes,\nlaptop calls, phone calls.\nTelegram owns one clean layer.'],
+    ['Food analysis', 'CC App', 'Genuine. User types /fuel-check-lean\nor /fuel-check with the photo.\nSlash commands are the natural UX.'],
+]
+patch_table = Table(patch_data, colWidths=[1.4*inch, 1.0*inch, 2.8*inch])
+patch_table.setStyle(TableStyle([
+    ('BACKGROUND', (0, 0), (-1, 0), HexColor('#2d3436')),
+    ('TEXTCOLOR', (0, 0), (-1, 0), HexColor('#ffffff')),
+    ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+    ('FONTSIZE', (0, 0), (-1, -1), 9),
+    ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),
+    ('GRID', (0, 0), (-1, -1), 0.5, HexColor('#cccccc')),
+    ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+    ('BACKGROUND', (2, 1), (2, 1), HexColor('#ffebee')),
+    ('BACKGROUND', (2, 2), (2, 2), HexColor('#e8f5e9')),
+    ('BACKGROUND', (2, 3), (2, 3), HexColor('#e8f5e9')),
+]))
+story.append(Spacer(1, 6))
+story.append(patch_table)
+
+story.append(Spacer(1, 10))
+story.append(Paragraph(
+    "The final picture: CC App won the camera. Telegram won voice. Garmin and Open-Meteo "
+    "own data. Each channel does the thing it's actually good at — no overlap, no patching. "
+    "The Telegram camera saga wasn't wasted: it taught us how hooks work, how channels "
+    "interact, and how to build detection systems. But the camera's real home was always "
+    "the CC App.",
+    insight_style
+))
+
+story.append(PageBreak())
+
+# Section 13: Global Behavioral Enforcement
+story.append(Paragraph("13. Global Behavioral Enforcement", h1_style))
+story.append(Paragraph(
+    "The system broke when tested from a different repository. Voice transcription asked for "
+    "permissions, logs wrote to hardcoded paths, and a fresh Claude session used ffmpeg instead "
+    "of transcribe.py. The root cause wasn't infrastructural — it was behavioral. Claude in "
+    "a new session didn't know <i>how</i> to act on channel messages.",
+    body_style
+))
+
+story.append(Spacer(1, 8))
+story.append(Paragraph("The Problem", h2_style))
+
+problem_data = [
+    ['What Broke', 'Root Cause'],
+    ['Voice transcription used ffmpeg\ninstead of transcribe.py', 'Feedback memory was project-scoped.\nNew session in different repo\nhad no knowledge of transcribe.py.'],
+    ['Hook logs wrote to hardcoded\ngarmin-to-code paths', 'Both hooks used absolute paths\ninstead of cwd from stdin JSON.'],
+    ['Voice transcription asked\nfor permissions', 'Claude didn\'t know it was allowed\nto run transcribe.py without asking.'],
+]
+problem_table = Table(problem_data, colWidths=[2.2*inch, 3.0*inch])
+problem_table.setStyle(TableStyle([
+    ('BACKGROUND', (0, 0), (-1, 0), HexColor('#2d3436')),
+    ('TEXTCOLOR', (0, 0), (-1, 0), HexColor('#ffffff')),
+    ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+    ('FONTSIZE', (0, 0), (-1, -1), 9),
+    ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),
+    ('GRID', (0, 0), (-1, -1), 0.5, HexColor('#cccccc')),
+    ('BACKGROUND', (0, 1), (0, -1), HexColor('#ffebee')),
+    ('BACKGROUND', (1, 1), (1, -1), HexColor('#fff3e0')),
+    ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+]))
+story.append(Spacer(1, 6))
+story.append(problem_table)
+
+story.append(Spacer(1, 12))
+story.append(Paragraph("The Solution: ~/.claude/CLAUDE.md", h2_style))
+story.append(Paragraph(
+    "A global CLAUDE.md file at ~/.claude/CLAUDE.md loads in every session, in every repo, "
+    "before Claude does anything. It's the strongest behavioral enforcement mechanism — "
+    "stronger than project-scoped memory, stronger than additionalContext from hooks, and "
+    "it requires zero hook infrastructure.",
+    body_style
+))
+
+story.append(Spacer(1, 8))
+story.append(Paragraph("Two rules currently enforced:", body_style))
+
+rules_data = [
+    ['Rule', 'Trigger', 'Action'],
+    ['Voice\nTranscription', 'Telegram message with\nattachment_kind="voice"', 'Download .oga → transcribe.py\n(Whisper API) → respond.\nNo hooks. No permissions.'],
+    ['Food Image\nDetection', 'Any image (Telegram or\nterminal) containing food', 'Auto-invoke /fuel-check-lean\nas baseline analysis.\nRespect explicit skill choice.'],
+]
+rules_table = Table(rules_data, colWidths=[1.2*inch, 1.8*inch, 2.2*inch])
+rules_table.setStyle(TableStyle([
+    ('BACKGROUND', (0, 0), (-1, 0), HexColor('#2d3436')),
+    ('TEXTCOLOR', (0, 0), (-1, 0), HexColor('#ffffff')),
+    ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+    ('FONTSIZE', (0, 0), (-1, -1), 9),
+    ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),
+    ('GRID', (0, 0), (-1, -1), 0.5, HexColor('#cccccc')),
+    ('ROWBACKGROUNDS', (0, 1), (-1, -1), [HexColor('#f8f9fa'), HexColor('#ffffff')]),
+    ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+]))
+story.append(Spacer(1, 6))
+story.append(rules_table)
+
+story.append(Spacer(1, 12))
+story.append(Paragraph("Enforcement Hierarchy", h2_style))
+
+hierarchy_data = [
+    ['Mechanism', 'Scope', 'Strength', 'Use Case'],
+    ['Global CLAUDE.md', 'All repos,\nall sessions', 'Strongest', 'Cross-project behavioral\nrules (voice, food detect)'],
+    ['Project CLAUDE.md', 'One repo', 'Strong', 'Repo-specific conventions\nand patterns'],
+    ['Project memory', 'One repo', 'Medium', 'Learned preferences\nand context'],
+    ['Hook additionalContext', 'One event', 'Weak', 'Suggestions to Claude\n(may be ignored)'],
+]
+hierarchy_table = Table(hierarchy_data, colWidths=[1.4*inch, 1.0*inch, 0.9*inch, 2.0*inch])
+hierarchy_table.setStyle(TableStyle([
+    ('BACKGROUND', (0, 0), (-1, 0), HexColor('#2d3436')),
+    ('TEXTCOLOR', (0, 0), (-1, 0), HexColor('#ffffff')),
+    ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+    ('FONTSIZE', (0, 0), (-1, -1), 9),
+    ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),
+    ('GRID', (0, 0), (-1, -1), 0.5, HexColor('#cccccc')),
+    ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+    ('BACKGROUND', (2, 1), (2, 1), HexColor('#e8f5e9')),
+    ('BACKGROUND', (2, 2), (2, 2), HexColor('#e8f5e9')),
+    ('BACKGROUND', (2, 3), (2, 3), HexColor('#fff3e0')),
+    ('BACKGROUND', (2, 4), (2, 4), HexColor('#ffebee')),
+]))
+story.append(Spacer(1, 6))
+story.append(hierarchy_table)
+
+story.append(Spacer(1, 10))
+story.append(Paragraph(
+    "The key insight: hooks handle observability (audit logs, terminal flash), but behavioral "
+    "enforcement belongs in CLAUDE.md. Hooks fire programmatically but can only suggest via "
+    "additionalContext. CLAUDE.md fires behaviorally but carries the weight of a direct "
+    "instruction. The combination — hooks for logging, CLAUDE.md for action — gives you "
+    "both observability and reliable enforcement without fighting the architecture.",
+    insight_style
+))
+
 story.append(Spacer(1, 20))
 story.append(HRFlowable(width="40%", thickness=0.5, color=HexColor('#cccccc')))
 story.append(Spacer(1, 10))
 story.append(Paragraph(
-    "Built during walking sessions in Iowa City, April 29–30, 2026.<br/>"
+    "Built during walking sessions in Iowa City, April 29 – May 1, 2026.<br/>"
     "42,396 steps. 20.98 miles. Body Battery 52 → 13.<br/>"
     "The system was tested on the same walks that built it.",
     ParagraphStyle('Footer', parent=body_style, alignment=TA_CENTER,

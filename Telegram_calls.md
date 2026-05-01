@@ -79,3 +79,79 @@ Yes I did
 ```
 
 ---
+
+## 2026-04-30T23:02:25-04:00
+
+**Telegram Reply Detected = True**
+
+**mode:** image
+
+**Chat ID:** 8558787718
+
+**Reply text:** Nope! That's from Telegram, not terminal — and it's a screenshot of our terminal session, not food. Nice try though! The channel tag says image_path and source="telegram", so the PreToolUse hook caught it as mode = image.
+
+**Input prior to tool use:**
+```
+<channel source="plugin:telegram:telegram" chat_id="8558787718" message_id="1706" user="vivekkmk" user_id="8558787718" ts="2026-05-01T03:02:09.000Z" image_path="/home/vivekkarmarkar/.claude/channels/telegram/inbox/1777604530561-AQADjAxrG7g7oUd-.jpg">
+But this is 400% a food image sent from the terminal
+</channel>
+```
+
+---
+
+## 2026-04-30T23:12:12-04:00
+
+**Telegram Reply Detected = True**
+
+**mode:** image
+
+**Chat ID:** 8558787718
+
+**Reply text:** Same Elkay water fountain, better angle this time — you can see the brand name and the water droplets on the basin. Not food! Hydration station vibes though.
+
+**Input prior to tool use:**
+```
+<channel source="plugin:telegram:telegram" chat_id="8558787718" message_id="1708" user="vivekkmk" user_id="8558787718" ts="2026-05-01T03:12:00.000Z" image_path="/home/vivekkarmarkar/.claude/channels/telegram/inbox/1777605121458-AQADjgxrG7g7oUd-.jpg">
+(photo)
+</channel>
+```
+
+---
+
+## 2026-04-30T23:13:30-04:00
+
+**Telegram Reply Detected = True**
+
+**mode:** image
+
+**Chat ID:** 8558787718
+
+**Reply text:** 100% sure — that's the same Elkay water fountain for the third time now! No doodhi, no gajar, no mumma's cooking here. Just stainless steel and water droplets. Nice try though 😄
+
+**Input prior to tool use:**
+```
+<channel source="plugin:telegram:telegram" chat_id="8558787718" message_id="1710" user="vivekkmk" user_id="8558787718" ts="2026-05-01T03:13:17.000Z" image_path="/home/vivekkarmarkar/.claude/channels/telegram/inbox/1777605198652-AQADjwxrG7g7oUd-.jpg">
+U sure doodhi gajar mumma?
+</channel>
+```
+
+---
+
+## 2026-04-30T23:37:14-04:00
+
+**Telegram Reply Detected = True**
+
+**mode:** image
+
+**Chat ID:** 8558787718
+
+**Reply text:** Hawkeye smoothie! Scored it 6 ways — taste 8/10, satiety 4/10, health 5/10. Late-night shake after a marathon coding session is earned comfort, but your body wants protein and whole food. This is dessert pretending to be nutrition. Go Hawks though.
+
+**Input prior to tool use:**
+```
+<channel source="plugin:telegram:telegram" chat_id="8558787718" message_id="1713" user="vivekkmk" user_id="8558787718" ts="2026-05-01T03:36:46.000Z" image_path="/home/vivekkarmarkar/.claude/channels/telegram/inbox/1777606608134-AQADkQxrG7g7oUd-.jpg">
+(photo)
+</channel>
+```
+
+---

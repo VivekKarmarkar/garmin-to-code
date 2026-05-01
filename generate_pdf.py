@@ -864,6 +864,141 @@ story.append(Paragraph(
     insight_style
 ))
 
+story.append(PageBreak())
+
+# Section 11: Terminal Image Detection
+story.append(Paragraph("11. Terminal Image Detection", h1_style))
+story.append(Paragraph(
+    "When the Claude Code mobile app camera started working natively via remote control, "
+    "the Telegram camera sidecar architecture transferred directly. A UserPromptSubmit hook "
+    "now detects terminal camera images using the same pattern as the PreToolUse hook for "
+    "Telegram — detect, classify, log, trigger.",
+    body_style
+))
+
+story.append(Spacer(1, 8))
+story.append(Paragraph("Two Image Paths, One Pattern", h2_style))
+
+dual_data = [
+    ['', 'Telegram Path', 'Terminal Path'],
+    ['Hook Type', 'PreToolUse', 'UserPromptSubmit'],
+    ['Trigger', 'Before reply tool fires', 'When user submits prompt'],
+    ['Detection', 'image_path= in channel tag', '@"...jpg/png" in prompt field'],
+    ['Data Source', 'Session transcript\n(message already written)', 'stdin JSON prompt field\n(message not yet in transcript)'],
+    ['Flash', 'Telegram Reply Detected\nmode = image', 'Terminal Image\nDetected = True'],
+    ['Log File', 'Telegram_calls.md', 'Terminal_image_calls.md'],
+    ['Food Trigger', 'additionalContext →\n/fuel-check-lean', 'additionalContext →\n/fuel-check-lean'],
+]
+dual_table = Table(dual_data, colWidths=[1.4*inch, 1.8*inch, 1.8*inch])
+dual_table.setStyle(TableStyle([
+    ('BACKGROUND', (0, 0), (-1, 0), HexColor('#2d3436')),
+    ('TEXTCOLOR', (0, 0), (-1, 0), HexColor('#ffffff')),
+    ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+    ('FONTNAME', (0, 1), (0, -1), 'Helvetica-Bold'),
+    ('FONTSIZE', (0, 0), (-1, -1), 9),
+    ('FONTNAME', (1, 1), (-1, -1), 'Helvetica'),
+    ('GRID', (0, 0), (-1, -1), 0.5, HexColor('#cccccc')),
+    ('ROWBACKGROUNDS', (0, 1), (-1, -1), [HexColor('#f8f9fa'), HexColor('#ffffff')]),
+    ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+    ('BACKGROUND', (1, 1), (1, -1), HexColor('#e3f2fd')),
+    ('BACKGROUND', (2, 1), (2, -1), HexColor('#e8f5e9')),
+]))
+story.append(Spacer(1, 6))
+story.append(dual_table)
+
+story.append(Spacer(1, 10))
+story.append(Paragraph(
+    "The key architectural difference: PreToolUse reads the transcript because the message "
+    "is already written by the time Claude decides to reply. UserPromptSubmit receives the "
+    "prompt directly via stdin JSON because the message has not yet been added to the "
+    "transcript. Same detection pattern, different data source — dictated by when each "
+    "hook fires in the lifecycle.",
+    insight_style
+))
+
+story.append(Spacer(1, 12))
+story.append(Paragraph("The CC App Bug", h2_style))
+story.append(Paragraph(
+    "Testing the terminal image hook revealed a bug in the Claude Code mobile app: "
+    "sending an image without any accompanying text silently fails. No error, no feedback — "
+    "the message simply never arrives. This was discovered by comparing the two audit logs.",
+    body_style
+))
+
+bug_data = [
+    ['Input Method', 'Image Only', 'Image + Text'],
+    ['Telegram', 'Works — wraps as (photo)', 'Works — caption preserved'],
+    ['Terminal (CC app)', 'Silent failure', 'Works — @"path" + text'],
+]
+bug_table = Table(bug_data, colWidths=[1.5*inch, 1.7*inch, 1.8*inch])
+bug_table.setStyle(TableStyle([
+    ('BACKGROUND', (0, 0), (-1, 0), HexColor('#2d3436')),
+    ('TEXTCOLOR', (0, 0), (-1, 0), HexColor('#ffffff')),
+    ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+    ('FONTNAME', (0, 1), (0, -1), 'Helvetica-Bold'),
+    ('FONTSIZE', (0, 0), (-1, -1), 9),
+    ('FONTNAME', (1, 1), (-1, -1), 'Helvetica'),
+    ('GRID', (0, 0), (-1, -1), 0.5, HexColor('#cccccc')),
+    ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+    ('BACKGROUND', (1, 1), (1, 1), HexColor('#e8f5e9')),
+    ('BACKGROUND', (2, 1), (2, 1), HexColor('#e8f5e9')),
+    ('BACKGROUND', (1, 2), (1, 2), HexColor('#ffebee')),
+    ('BACKGROUND', (2, 2), (2, 2), HexColor('#e8f5e9')),
+]))
+story.append(Spacer(1, 6))
+story.append(bug_table)
+
+story.append(Spacer(1, 8))
+story.append(Paragraph(
+    "Filed as GitHub issue #55198 on anthropics/claude-code. The silent failure forced a "
+    "creative workaround — and revealed why the Telegram path remains sharper.",
+    body_style
+))
+
+story.append(Spacer(1, 12))
+story.append(Paragraph("The Banana Smoothie Test", h2_style))
+story.append(Paragraph(
+    "A real-world food photo — a banana, milk, oats, and whey protein shake in a Hawkeye "
+    "cup — tested both paths side by side. The results made the architectural gap concrete.",
+    body_style
+))
+
+smoothie_data = [
+    ['', 'Telegram Path', 'Terminal Path'],
+    ['Send photo', 'Snap and send — no text needed', 'Must type text or message\nsilently fails'],
+    ['Food detection', 'PreToolUse hook auto-detects\nimage mode → additionalContext\ntriggers /fuel-check-lean', 'UserPromptSubmit hook detects\nimage → additionalContext\ntriggers /fuel-check-lean'],
+    ['Workaround', 'None needed', 'Type "/fuel-check-lean" as the\nrequired text — encodes intent\nin the only available field'],
+    ['User effort', 'Zero thought — just snap', 'Must remember to type\nthe skill name'],
+]
+smoothie_table = Table(smoothie_data, colWidths=[1.2*inch, 2.0*inch, 2.0*inch])
+smoothie_table.setStyle(TableStyle([
+    ('BACKGROUND', (0, 0), (-1, 0), HexColor('#2d3436')),
+    ('TEXTCOLOR', (0, 0), (-1, 0), HexColor('#ffffff')),
+    ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+    ('FONTNAME', (0, 1), (0, -1), 'Helvetica-Bold'),
+    ('FONTSIZE', (0, 0), (-1, -1), 9),
+    ('FONTNAME', (1, 1), (-1, -1), 'Helvetica'),
+    ('GRID', (0, 0), (-1, -1), 0.5, HexColor('#cccccc')),
+    ('ROWBACKGROUNDS', (0, 1), (-1, -1), [HexColor('#f8f9fa'), HexColor('#ffffff')]),
+    ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+    ('BACKGROUND', (1, 1), (1, -1), HexColor('#e3f2fd')),
+    ('BACKGROUND', (2, 1), (2, -1), HexColor('#fff3e0')),
+]))
+story.append(Spacer(1, 6))
+story.append(smoothie_table)
+
+story.append(Spacer(1, 10))
+story.append(Paragraph(
+    "The Telegram sidecar, originally built as a workaround because remote control had no "
+    "camera, turned out to be architecturally superior: it handles image-only input, supports "
+    "three modes (text/image/voice), and has richer metadata in channel tags. The terminal "
+    "workaround — typing /fuel-check-lean as the required text — is clever but manual. "
+    "It encodes intent in the only available field, turning a constraint into a feature. "
+    "But the Telegram path needs no encoding at all. The workaround outlived the limitation "
+    "it was built for.",
+    insight_style
+))
+
 story.append(Spacer(1, 20))
 story.append(HRFlowable(width="40%", thickness=0.5, color=HexColor('#cccccc')))
 story.append(Spacer(1, 10))

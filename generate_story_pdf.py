@@ -104,9 +104,9 @@ story.append(Paragraph(
     "Claude Code has a code layer (writing software) and an OS layer (skills, hooks, plugins "
     "that personalize it). The life layer is a third layer on top: making Claude aware of your "
     "body, your environment, your nutrition, what you see, and what you say — the physical "
-    "reality of the person using it. Life doesn’t happen in text boxes. If you’re walking all "
+    "reality of the person using it. Life doesn't happen in text boxes. If you're walking all "
     "day with only a phone, Claude should know your steps, your heart rate, the weather, what "
-    "you ate, what you’re looking at, and what you said out loud — not just what you typed.",
+    "you ate, what you're looking at, and what you said out loud — not just what you typed.",
     body_style
 ))
 
@@ -209,15 +209,14 @@ story.append(Spacer(1, 6))
 story.append(tools_table)
 
 story.append(Spacer(1, 15))
-story.append(Paragraph("Three Lean Skills", h2_style))
+story.append(Paragraph("Two Lean Skills", h2_style))
 story.append(Paragraph(
-    "Three global skills wrap the MCP tools for quick conversational access:",
+    "Two global skills wrap the MCP tools for quick conversational access:",
     body_style
 ))
 skills_items = [
     "<b>/step-count</b> — one-line step count for any date",
     "<b>/rich-stats</b> — full daily dashboard with all metrics and an opinionated summary",
-    "<b>/fuel-check</b> — context-aware food photo scoring using Garmin stats + weather + time of day",
 ]
 for s in skills_items:
     story.append(Paragraph(f"•  {s}", bullet_style))
@@ -234,7 +233,7 @@ weather_data = [
     ['Capability', 'What It Provides'],
     ['Current / Forecast', 'Temperature, humidity, wind,\nprecipitation, UV index'],
     ['Historical Archive', 'ERA5 reanalysis data back to 1940\nfor any coordinates and date range'],
-    ['Apparent Temperature', '“Feels like” factoring in wind chill\nand humidity'],
+    ['Apparent Temperature', '"Feels like" factoring in wind chill\nand humidity'],
 ]
 weather_table = Table(weather_data, colWidths=[1.8*inch, 3.5*inch])
 weather_table.setStyle(TableStyle([
@@ -257,9 +256,8 @@ story.append(PageBreak())
 # ──────────────────────────────────────────────
 story.append(Paragraph("0.2.1. Discovery: HR Recovery Patterns", h1_style))
 story.append(Paragraph(
-    "The Garmin data wasn’t just numbers on a dashboard. By cross-referencing data across "
-    "multiple days conversationally — asking Claude questions, getting answers, following up — "
-    "the data came alive in a way that static graphs in Garmin Connect never could.",
+    "An unexpected finding from cross-referencing Garmin data across multiple days. "
+    "Resting HR isn't a fitness metric — it's a recovery metric.",
     body_style
 ))
 
@@ -305,10 +303,10 @@ story.append(Paragraph("•  <b>Apr 6–8:</b>  Big → Big → Crash. No recove
 story.append(Paragraph("•  <b>Apr 20–22:</b>  Big → Easy → Easier. Proper taper. HR dropped to 54.", bullet_style))
 story.append(Spacer(1, 8))
 story.append(Paragraph(
-    "This finding emerged from conversation, not computation. The data was always there in "
-    "Garmin Connect — but it took asking Claude “why was my HR so high on the 8th?” to "
-    "connect the dots across days. That’s the life layer difference: data brought to life "
-    "through interaction, not static graphs.",
+    "The body can handle 40K+ step days. It can't handle them stacked without recovery. "
+    "One easy day after a big effort brings resting HR back near the old ultra-running "
+    "range of 40–50 bpm. This is the same principle behind training periodization — "
+    "adaptation happens during recovery, not during effort.",
     insight_style
 ))
 
@@ -368,9 +366,9 @@ story.append(Paragraph(
 
 story.append(Spacer(1, 10))
 story.append(Paragraph(
-    "The camera layer wasn’t planned — it emerged. A channel designed to send food photos "
+    "The camera layer wasn't planned — it emerged. A channel designed to send food photos "
     "became a spatial reasoning interface when curiosity met capability. The /guess-location "
-    "skill was born from play, not planning. That’s the life layer pattern: infrastructure "
+    "skill was born from play, not planning. That's the life layer pattern: infrastructure "
     "designed for one purpose finds its real purpose through use.",
     insight_style
 ))
@@ -385,9 +383,9 @@ story.append(Paragraph(
     "A Telegram message can arrive as text, an image, or a voice note. The system needs to: "
     "detect that a Telegram message arrived, classify which of the three modes it is, take "
     "the correct action for that mode, do this reliably across every session and every repo, "
-    "and provide visibility into whether it’s actually working. There is no built-in support "
-    "for any of this — Claude Code doesn’t distinguish channel message modes, doesn’t enforce "
-    "behavior on them, and doesn’t let you observe what happened.",
+    "and provide visibility into whether it's actually working. There is no built-in support "
+    "for any of this — Claude Code doesn't distinguish channel message modes, doesn't enforce "
+    "behavior on them, and doesn't let you observe what happened.",
     body_style
 ))
 
@@ -422,17 +420,35 @@ story.append(Paragraph(
     "The black box solution is behavioral enforcement via a global instruction file. Instead "
     "of building infrastructure (hooks, plugins, custom code) to make Claude act correctly on "
     "channel messages, you write two plain-English rules in ~/.claude/CLAUDE.md and Claude "
-    "just follows them. It works — but you can’t see inside it. You have no way to verify "
-    "it’s actually following the rules until it doesn’t.",
+    "just follows them. It works — but you can't see inside it. You have no way to verify "
+    "it's actually following the rules until it doesn't.",
     body_style
 ))
 
 story.append(Spacer(1, 10))
-blackbox_flow = [
-    ['Input', '→', 'CLAUDE.md', '→', 'Output'],
-    ['Three modes:\ntext, image, voice', '', 'Two plain-English\nrules', '', 'Correct behavior\n(no visibility)'],
+
+# CLAUDE.md enters from top
+claudemd_row = [
+    ['', '', 'CLAUDE.md', '', ''],
+    ['', '', '↓', '', ''],
 ]
-blackbox_table = Table(blackbox_flow, colWidths=[1.3*inch, 0.4*inch, 1.5*inch, 0.4*inch, 1.3*inch])
+claudemd_top = Table(claudemd_row, colWidths=[1.3*inch, 0.4*inch, 1.5*inch, 0.4*inch, 1.3*inch])
+claudemd_top.setStyle(TableStyle([
+    ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+    ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+    ('FONTNAME', (0, 0), (-1, -1), 'Helvetica-Bold'),
+    ('FONTSIZE', (0, 0), (-1, -1), 9),
+    ('TEXTCOLOR', (0, 0), (-1, -1), HexColor('#2d3436')),
+    ('BACKGROUND', (2, 0), (2, 0), HexColor('#fff3e0')),
+    ('BOX', (2, 0), (2, 0), 0.5, HexColor('#aaaaaa')),
+]))
+story.append(claudemd_top)
+
+blackbox_flow = [
+    ['Input', '→', 'Claude Code', '→', 'Output'],
+    ['Terminal, Telegram,\nor other sources', '', '(mechanism\nunknown)', '', 'Behavior that appears\nto be correct'],
+]
+blackbox_table = Table(blackbox_flow, colWidths=[1.3*inch, 0.4*inch, 1.5*inch, 0.4*inch, 1.5*inch])
 blackbox_table.setStyle(TableStyle([
     ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
     ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
@@ -448,7 +464,6 @@ blackbox_table.setStyle(TableStyle([
     ('BOX', (4, 0), (4, 1), 0.5, HexColor('#aaaaaa')),
     ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
 ]))
-story.append(Spacer(1, 10))
 story.append(blackbox_table)
 
 story.append(Spacer(1, 12))
@@ -481,11 +496,11 @@ story.append(PageBreak())
 story.append(Paragraph("3. The Hallucination Incident", h1_style))
 story.append(Paragraph(
     "CLAUDE.md solved the problem — Claude follows the two rules and acts correctly on "
-    "Telegram messages. But it’s a black box. You can’t see whether it’s working. This was "
+    "Telegram messages. But it's a black box. You can't see whether it's working. This was "
     "proven when Claude hallucinated that a terminal message came from Telegram — it "
     "misidentified the source and acted on the wrong rules. The black box had no dashboard, "
-    "no logs, no flash. It just silently did the wrong thing. That’s when it became clear: "
-    "a solution that works isn’t enough. You need to be able to see it working.",
+    "no logs, no flash. It just silently did the wrong thing. That's when it became clear: "
+    "a solution that works isn't enough. You need to be able to see it working.",
     body_style
 ))
 
@@ -493,11 +508,10 @@ story.append(Spacer(1, 10))
 story.append(Paragraph("The Enforcement Gap", h2_style))
 
 gap_data = [
-    ['What Exists', 'What’s Missing'],
-    ['<channel> XML tag marks\nsource in prompt', 'No programmatic validation\nof source identity'],
+    ["What Exists", "What's Missing"],
+    ['&lt;channel&gt; XML tag marks\nsource in prompt', 'No programmatic validation\nof source identity'],
     ['MCP server instructions\ntell Claude how to act', 'No hook event fires\nfor channel messages'],
     ['UserPromptSubmit fires\nfor terminal input', 'No ChannelMessageReceived\nor equivalent event'],
-    ['PreToolUse/PostToolUse\nfire for tool calls', 'No per-channel tool\nscoping or routing'],
 ]
 gap_table = Table(gap_data, colWidths=[2.5*inch, 2.5*inch])
 gap_table.setStyle(TableStyle([
@@ -611,9 +625,9 @@ story.append(PageBreak())
 # ──────────────────────────────────────────────
 story.append(Paragraph("5. Human-AI Collaboration", h1_style))
 story.append(Paragraph(
-    "This project wasn’t one person’s work. Claude built the engine — the MCP server, the "
+    "This project wasn't one person's work. Claude built the engine — the MCP server, the "
     "transcription script, the Telegram integration, the detection hooks, the global CLAUDE.md "
-    "rules. All the code came from Claude. Vivek provided three things that code can’t provide: "
+    "rules. All the code came from Claude. Vivek provided three things that code can't provide: "
     "taste, smell, and steering.",
     body_style
 ))
@@ -621,7 +635,7 @@ story.append(Paragraph(
 story.append(Spacer(1, 10))
 story.append(Paragraph("Taste", h2_style))
 story.append(Paragraph(
-    "Pushing for Telegram voice notes when it wasn’t obvious, seeing how separate threads "
+    "Pushing for Telegram voice notes when it wasn't obvious, seeing how separate threads "
     "(camera, food, voice, location) were converging into one unified problem, bringing "
     "frameworks of thinking — Unix philosophy, verify globally, step by step.",
     body_style
@@ -630,9 +644,9 @@ story.append(Paragraph(
 story.append(Spacer(1, 8))
 story.append(Paragraph("Smell", h2_style))
 story.append(Paragraph(
-    "Designing the observability architecture. CLAUDE.md works but is invisible — you can’t "
+    "Designing the observability architecture. CLAUDE.md works but is invisible — you can't "
     "tell if Claude is following the rules. The hooks, the terminal flash, the audit logs — "
-    "that’s the layer that lets you see the system operating. Without it, the black box "
+    "that's the layer that lets you see the system operating. Without it, the black box "
     "stays black.",
     body_style
 ))
@@ -650,9 +664,9 @@ story.append(Spacer(1, 12))
 collab_data = [
     ['Contribution', 'Who', 'Parallel'],
     ['Code — MCP server, transcribe.py,\nhooks, CLAUDE.md rules', 'Claude', '—'],
-    ['Taste — vision, convergence\nof threads, frameworks', 'Vivek', 'Tao: “penumbra” and\n“softer aspects”'],
-    ['Smell — observability\narchitecture, audit logs', 'Vivek', 'Tao: “smell test”'],
-    ['Steering — corrections,\nvalidation, dialogue', 'Vivek', 'Schwartz: “guided\nand validated”'],
+    ['Taste — vision, convergence\nof threads, frameworks', 'Vivek', 'Tao: "penumbra" and\n"softer aspects"'],
+    ['Smell — observability\narchitecture, audit logs', 'Vivek', 'Tao: "smell test"'],
+    ['Steering — corrections,\nvalidation, dialogue', 'Vivek', 'Schwartz: "guided\nand validated"'],
 ]
 collab_table = Table(collab_data, colWidths=[2.2*inch, 0.8*inch, 2.0*inch])
 collab_table.setStyle(TableStyle([
@@ -672,13 +686,13 @@ story.append(collab_table)
 
 story.append(Spacer(1, 10))
 story.append(Paragraph(
-    "There are soft parallels to two recent papers. Tao’s work on AI in mathematics describes "
-    "“penumbra” and “softer aspects” — the heuristic reasoning, motivation, and strategy "
-    "surrounding a formal core. That maps to Vivek’s taste. Tao’s “smell test” — the "
-    "intuitive signal that something is correct or wrong — maps to the observability layer. "
-    "Schwartz’s QCD paper credits the human author with having “guided and validated” the "
-    "AI’s calculations. Those two words compress the entire steering process into a phrase "
-    "that sounds simple but isn’t.",
+    'There are soft parallels to two recent papers. Tao\'s work on AI in mathematics describes '
+    '"penumbra" and "softer aspects" — the heuristic reasoning, motivation, and strategy '
+    'surrounding a formal core. That maps to Vivek\'s taste. Tao\'s "smell test" — the '
+    'intuitive signal that something is correct or wrong — maps to the observability layer. '
+    'Schwartz\'s QCD paper credits the human author with having "guided and validated" the '
+    'AI\'s calculations. Those two words compress the entire steering process into a phrase '
+    'that sounds simple but isn\'t.',
     insight_style
 ))
 
@@ -701,7 +715,7 @@ senses_data = [
     ['Layer', 'Infrastructure', 'Status'],
     ['Body', 'Garmin MCP — steps, HR,\nstress, Body Battery', 'Live'],
     ['Environment', 'Open-Meteo MCP — temperature,\nsunshine, feels-like', 'Live'],
-    ['Nutrition', 'Camera + /fuel-check\n+ Garmin + weather context', 'Live'],
+    ['Nutrition', 'Camera (/fuel-check-lean), or\nCamera + Garmin + weather (/fuel-check)', 'Live'],
     ['Eyes', 'Telegram camera → CC app\nnative camera', 'Live'],
     ['Voice', 'transcribe.py (Whisper API)\nfor Telegram .oga files', 'Live'],
     ['Telephone', 'Real-time bidirectional\nvoice — phone call', '?'],
@@ -727,17 +741,17 @@ story.append(senses_table)
 
 story.append(Spacer(1, 12))
 story.append(Paragraph(
-    "Five of six are built. The sixth is the logical next step in the progression: a real-time "
-    "phone call — going from “Claude reads what you said” to “Claude talks with you.”",
+    'Five of six are built. The sixth is the logical next step in the progression: a real-time '
+    'phone call — going from "Claude reads what you said" to "Claude talks with you."',
     body_style
 ))
 
 story.append(Spacer(1, 8))
 story.append(Paragraph(
-    "But logical doesn’t mean practical. Voice is a spectrum — telephone calls, laptop calls, "
+    "But logical doesn't mean practical. Voice is a spectrum — telephone calls, laptop calls, "
     "voice notes — and each point on the spectrum carries different latency, effort, and feel. "
-    "Claude isn’t fast at real-time responses. Latency that’s invisible in a text exchange "
-    "becomes unnatural in a live call. And there’s the social weight: a phone call locks you "
+    "Claude isn't fast at real-time responses. Latency that's invisible in a text exchange "
+    "becomes unnatural in a live call. And there's the social weight: a phone call locks you "
     "in, while a voice note lets you keep walking, say what you need at your own pace, and "
     "move on. Voice notes hit a sweet spot that a phone call might not.",
     body_style
@@ -746,7 +760,7 @@ story.append(Paragraph(
 story.append(Spacer(1, 8))
 story.append(Paragraph(
     "The telephone layer is the obvious abstract progression but an open question in practice. "
-    "It might work. It might feel worse than what’s already there. It might require setup and "
+    "It might work. It might feel worse than what's already there. It might require setup and "
     "API work that breaks the walking-only constraint. The answer is: try it and find out.",
     insight_style
 ))
